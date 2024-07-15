@@ -112,17 +112,15 @@ manifests: controller-gen kustomize ## Generates the manifests in $PROJECT_DIR/i
 	controller-gen crd:crdVersions=v1 rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=install/crd output:rbac:artifacts:config=install/rbac && $(KUSTOMIZE) build install > $(AUTHORINO_MANIFESTS)
 	$(MAKE) patch-webhook
 
-run: AUTHORINO_VERSION=v0.17.3-dev # change as version increments
 run:GIT_SHA=$(shell git rev-parse HEAD)
-run:DIRTY=$(shell $(PROJECT_PATH)/hack/check-git-dirty.sh || echo "unknown")
+run:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
 run: generate manifests ## Runs the application against the Kubernetes cluster configured in ~/.kube/config
-	go run -ldflags "-X main.version=${AUTHORINO_VERSION} -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" ./main.go server
+	go run -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" ./main.go server
 
-build: AUTHORINO_VERSION=v0.17.3-dev # change as version increments
 build:GIT_SHA=$(shell git rev-parse HEAD)
-build:DIRTY=$(shell $(PROJECT_PATH)/hack/check-git-dirty.sh || echo "unknown")
+build:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
 build: generate ## Builds the manager binary
-	CGO_ENABLED=0 GO111MODULE=on go build -a -ldflags "-X main.version=${AUTHORINO_VERSION} -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/authorino main.go
+	CGO_ENABLED=0 GO111MODULE=on go build -a -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/authorino main.go
 
 IMAGE_REPO ?= authorino
 VERSION ?= $(GIT_SHA)
