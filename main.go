@@ -375,7 +375,7 @@ func runWebhookServer(cmd *cobra.Command, _ []string) {
 func setup(cmd *cobra.Command, log logOptions, telemetry telemetryOptions) {
 	setupLogger(log)
 
-	logger.Info("build information", "version", version, "commit", gitSHA, "dirty", dirty)
+	logger.Info("build information", "version", version, "commit", gitSHA, "dirty", dirty, "cmd", cmd.Use)
 
 	// log the command-line args
 	if logger.V(1).Enabled() {
