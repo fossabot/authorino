@@ -45,8 +45,8 @@ jobs:
       - name: Set Authorino Dirty
         id: authorino-dirty
         run: |
-          GIT_DIRTY=$$(git diff --stat); \
-          if [ -n "$$GIT_DIRTY" ]; then \
+          GIT_DIRTY=$(git diff --stat); \
+          if [ -n "$GIT_DIRTY" ]; then \
             DIRTY="true"; \
           else \
             DIRTY="false"; \
