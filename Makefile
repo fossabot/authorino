@@ -2,13 +2,7 @@
 SHELL = /bin/bash
 
 # Authorino version
-AUTHORINO_VERSION = v0.17.3-dev # change as version increments
-
-# Authorino commit hash
-GIT_SHA = $(shell git rev-parse HEAD)
-
-# Authorino dirty
-DIRTY = $(shell $(PROJECT_PATH)/hack/check-git-dirty.sh || echo "unknown")
+VERSION ?= 0.0.0
 
 # Use vi as default editor
 EDITOR ?= vi
