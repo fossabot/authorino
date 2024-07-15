@@ -565,8 +565,8 @@ func timeoutMs(timeout int) time.Duration {
 
 func printVersion(_ *cobra.Command, _ []string) {
 	if dirty == "true" {
-		fmt.Printf("%s (%s-dirty)\n", version, gitSHA)
+		fmt.Printf("Authorino%s (%s-dirty)\n", version, gitSHA)
 	} else {
-		fmt.Printf("%s (%s)\n", version, gitSHA)
+		fmt.Printf("Authorino%s (%s)\n", version, gitSHA)
 	}
 }
