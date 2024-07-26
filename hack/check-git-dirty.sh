@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if ! command -v git &>/dev/null 
+if ! command -v git &>/dev/null
 then
     echo "git not found..." >&2
     exit 1
