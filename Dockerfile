@@ -11,7 +11,7 @@ ENV GIT_SHA=${GIT_SHA:-unknown}
 ARG DIRTY
 ENV DIRTY=${DIRTY:-unknown}
 RUN CGO_ENABLED=0 GO111MODULE=on go build -a -ldflags "-X main.version=${VERSION} -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o /usr/bin/authorino main.go
-  
+
 # Use Red Hat minimal base image to package the binary
 # https://catalog.redhat.com/software/containers/ubi9-minimal
 FROM registry.access.redhat.com/ubi9-minimal:latest
