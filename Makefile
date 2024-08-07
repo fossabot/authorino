@@ -119,7 +119,7 @@ generate: vendor controller-gen ## Generates types deepcopy code
 manifests: controller-gen kustomize ## Generates the manifests in $PROJECT_DIR/install
 	controller-gen crd:crdVersions=v1 rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=install/crd output:rbac:artifacts:config=install/rbac && $(KUSTOMIZE) build install > $(AUTHORINO_MANIFESTS)
 	$(MAKE) patch-webhook
-# TODO create env var to reference version build.yaml 
+	
 run:GIT_SHA=$(shell git rev-parse HEAD)
 run:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
 run:VERSION=$(shell $(YQ) '.build.version' build.yaml)
