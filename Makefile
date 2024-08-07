@@ -42,6 +42,14 @@ help:
 
 ##@ Dependencies
 
+YQ=$(PROJECT_PATH)/bin/yq
+YQ_VERSION := v4.34.2
+$(YQ):
+	$(call go-install-tool,$(YQ),github.com/mikefarah/yq/v4@$(YQ_VERSION))
+
+.PHONY: yq
+yq: $(YQ) ## Download yq locally if necessary.
+
 CONTROLLER_GEN = $(PROJECT_DIR)/bin/controller-gen
 controller-gen: ## Installs controller-gen in $PROJECT_DIR/bin
 	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.9.0)
@@ -111,14 +119,16 @@ generate: vendor controller-gen ## Generates types deepcopy code
 manifests: controller-gen kustomize ## Generates the manifests in $PROJECT_DIR/install
 	controller-gen crd:crdVersions=v1 rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=install/crd output:rbac:artifacts:config=install/rbac && $(KUSTOMIZE) build install > $(AUTHORINO_MANIFESTS)
 	$(MAKE) patch-webhook
-
+# TODO create env var to reference version build.yaml 
 run:GIT_SHA=$(shell git rev-parse HEAD)
 run:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
+run:VERSION=$(shell $(YQ) '.build.version' build.yaml)
 run: generate manifests ## Runs the application against the Kubernetes cluster configured in ~/.kube/config
 	go run -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" ./main.go server
 
 build:GIT_SHA=$(shell git rev-parse HEAD)
 build:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
+build:VERSION=$(shell $(YQ) '.build.version' build.yaml)
 build: generate ## Builds the manager binary
 	CGO_ENABLED=0 GO111MODULE=on go build -a -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/authorino main.go
 
