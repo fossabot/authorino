@@ -122,12 +122,14 @@ manifests: controller-gen kustomize ## Generates the manifests in $PROJECT_DIR/i
 	
 run:GIT_SHA=$(shell git rev-parse HEAD)
 run:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
+run:shell $(PROJECT_DIR)/hack/check-version.sh
 run:VERSION=$(shell $(YQ) '.build.version' build.yaml)
 run: generate manifests ## Runs the application against the Kubernetes cluster configured in ~/.kube/config
 	go run -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" ./main.go server
 
 build:GIT_SHA=$(shell git rev-parse HEAD)
 build:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
+build:shell $(PROJECT_DIR)/hack/check-version.sh
 build:VERSION=$(shell $(YQ) '.build.version' build.yaml)
 build: generate ## Builds the manager binary
 	CGO_ENABLED=0 GO111MODULE=on go build -a -ldflags "-X main.version=v$(VERSION) -X main.gitSHA=${GIT_SHA} -X main.dirty=${DIRTY}" -o bin/authorino main.go
@@ -142,6 +144,7 @@ IMAGE_TAG=local
 endif
 AUTHORINO_IMAGE ?= $(IMAGE_REPO):$(IMAGE_TAG)
 
+docker-build:shell $(PROJECT_DIR)/hack/check-version.sh
 docker-build:AUTHORINO_VERSION=$(shell $(YQ) '.build.version' build.yaml)
 docker-build:GIT_SHA=$(shell git rev-parse HEAD)
 docker-build:DIRTY=$(shell $(PROJECT_PATH)/hack/check-git-dirty.sh || echo "unknown")
