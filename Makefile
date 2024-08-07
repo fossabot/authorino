@@ -142,7 +142,7 @@ IMAGE_TAG=local
 endif
 AUTHORINO_IMAGE ?= $(IMAGE_REPO):$(IMAGE_TAG)
 
-docker-build: AUTHORINO_VERSION=v0.17.3-dev # change as version increments
+docker-build:AUTHORINO_VERSION=$(shell $(YQ) '.build.version' build.yaml)
 docker-build:GIT_SHA=$(shell git rev-parse HEAD)
 docker-build:DIRTY=$(shell $(PROJECT_PATH)/hack/check-git-dirty.sh || echo "unknown")
 docker-build: ## Builds an image based on the current branch
