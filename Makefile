@@ -147,7 +147,7 @@ AUTHORINO_IMAGE ?= $(IMAGE_REPO):$(IMAGE_TAG)
 docker-build:$(shell $(PROJECT_DIR)/hack/check-version.sh)
 docker-build:AUTHORINO_VERSION=$(shell $(YQ) '.build.version' build.yaml)
 docker-build:GIT_SHA=$(shell git rev-parse HEAD)
-docker-build:DIRTY=$(shell $(PROJECT_PATH)/hack/check-git-dirty.sh || echo "unknown")
+docker-build:DIRTY=$(shell $(PROJECT_DIR)/hack/check-git-dirty.sh || echo "unknown")
 docker-build: ## Builds an image based on the current branch
 	docker build --build-arg VERSION=$(AUTHORINO_VERSION) --build-arg GIT_SHA=$(GIT_SHA) --build-arg DIRTY=$(DIRTY) -t $(AUTHORINO_IMAGE) .
 
