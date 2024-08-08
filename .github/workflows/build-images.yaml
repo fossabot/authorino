@@ -33,12 +33,12 @@ jobs:
       - name: Set Authorino version
         id: authorino-version
         run: |
-          echo "AUTHORINO_VERSION=latest" >> $GITHUB_ENV
+          echo "VERSION=latest" >> $GITHUB_ENV
       - name: Set Authorino git sha
         id: authorino-git-sha
         run: |
           if [[ ${GITHUB_REF_NAME/\//-} =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.+)?$ ]]; then
-          echo "AUTHORINO_VERSION=${GITHUB_REF_NAME/\//-}" >> $GITHUB_ENV
+          echo "VERSION=${GITHUB_REF_NAME/\//-}" >> $GITHUB_ENV
           else
           echo "GIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
           fi
@@ -63,7 +63,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/s390x,linux/ppc64le
           build-args: |
             GIT_SHA=${{ env.GIT_SHA }}
-            VERSION=${{ env.AUTHORINO_VERSION }}
+            VERSION=${{ env.VERSION }}
             DIRTY=${{ env.DIRTY }}
           containerfiles: |
             ./Dockerfile
