@@ -12,4 +12,4 @@ else
 fi
 
 # Use yq to set build.version to version variable
-yq eval ".build.version = $version" -i build.yaml
+yq eval ".build.version = \"$version\"" -i build.yaml
