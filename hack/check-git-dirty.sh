@@ -13,7 +13,10 @@ then
     # Check if the output contains 'build.yaml' and '1 file changed'
     if echo "$output" | grep -q " build.yaml | 2 +-" && echo "$output" | grep -q "1 file changed, 1 insertion(+), 1 deletion(-)"
     then
-        echo "false"
+        if git diff build.yaml | grep -E -q '^\+ *version:' && ! git diff build.yaml | grep -E -q '^\+ *(?!version:)' 
+        then
+            echo "false"
+        fi
     else
         echo "true"
     fi
